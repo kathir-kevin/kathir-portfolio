@@ -1,730 +1,278 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Kathiravan K — Full-Stack Engineer</title>
-<meta name="description" content="Software Developer II — PHP, Laravel, .NET Core, Angular, Health Tech, Chennai"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="description" content="Kathiravan K — Software Developer II · PHP · Laravel · .NET Core · Angular · Chennai"/>
+<title>Kathiravan K — Software Developer II</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={
+  theme:{
+    extend:{
+      fontFamily:{
+        display:['Bebas Neue','sans-serif'],
+        body:['Crimson Pro','serif'],
+        mono:['JetBrains Mono','monospace'],
+      },
+      colors:{
+        ink:'#080810',paper:'#0d0d18',surface:'#12121f',card:'#17172a',
+        o:'#ff6b35',o2:'#ffaa4c',teal:'#00d4aa',
+        dim:'#6a6a88',line:'rgba(255,255,255,0.07)',
+      },
+      animation:{
+        'blink':'blink 1s step-end infinite',
+        'pulse-dot':'pulse-dot 2s ease-in-out infinite',
+        'marquee':'marquee 30s linear infinite',
+        'grid-drift':'gridDrift 20s linear infinite',
+        'fade-up':'fadeUp .7s ease forwards',
+        'count-bar':'countBar 1.5s ease forwards',
+      },
+      keyframes:{
+        blink:{'0%,100%':{opacity:'1'},'50%':{opacity:'0'}},
+        'pulse-dot':{'0%,100%':{opacity:'1'},'50%':{opacity:'.2'}},
+        marquee:{'0%':{transform:'translateX(0)'},'100%':{transform:'translateX(-50%)'}},
+        gridDrift:{'0%':{'background-position':'0 0'},'100%':{'background-position':'80px 80px'}},
+        fadeUp:{'from':{opacity:'0',transform:'translateY(40px)'},'to':{opacity:'1',transform:'translateY(0)'}},
+        countBar:{'from':{width:'0%'},'to':{width:'100%'}},
+      }
+    }
+  }
+}
+</script>
 <style>
-/* ─── TOKENS ─── */
-:root{
-  --ink:#080810;
-  --paper:#0d0d18;
-  --surface:#12121f;
-  --card:#17172a;
-  --line:rgba(255,255,255,0.07);
-  --o:#ff6b35;
-  --o2:#ffaa4c;
-  --teal:#00d4aa;
-  --text:#e2e2f0;
-  --dim:#6a6a88;
-  --r:4px;
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;font-size:16px;}
-body{
-  background:var(--ink);color:var(--text);
-  font-family:'Crimson Pro',serif;
-  overflow-x:hidden;cursor:none;
-}
-::-webkit-scrollbar{width:3px;}
-::-webkit-scrollbar-track{background:var(--ink);}
-::-webkit-scrollbar-thumb{background:var(--o);}
+/* ── minimal custom css – everything else is Tailwind ── */
+:root{--o:#ff6b35;--o2:#ffaa4c;--teal:#00d4aa;}
+*{box-sizing:border-box;margin:0;padding:0;}
 ::selection{background:var(--o);color:#fff;}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-thumb{background:var(--o);}
+body{cursor:none;}
+#cur{position:fixed;width:8px;height:8px;background:var(--o);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s;}
+#cur-ring{position:fixed;width:38px;height:38px;border:1px solid rgba(255,107,53,.45);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .25s,height .25s,border-color .25s;}
+.cursor-grow{width:56px!important;height:56px!important;border-color:rgba(255,107,53,.8)!important;}
 
-/* ─── CURSOR ─── */
-#cur,#cur-ring{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
-#cur{width:8px;height:8px;background:var(--o);transition:transform .1s;}
-#cur-ring{width:40px;height:40px;border:1px solid rgba(255,107,53,.4);transition:width .3s,height .3s,border-color .3s;}
-body:hover #cur-ring{border-color:rgba(255,107,53,.7);}
-
-/* ─── LOADER ─── */
-#loader{
-  position:fixed;inset:0;background:var(--ink);
-  display:flex;align-items:center;justify-content:center;
-  z-index:10000;flex-direction:column;gap:1rem;
-}
-.loader-name{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(3rem,8vw,7rem);
-  letter-spacing:.1em;
-  color:var(--o);
-  overflow:hidden;
-}
-.loader-bar-wrap{width:200px;height:2px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;}
-.loader-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--o),var(--o2));border-radius:2px;transition:width .05s linear;}
-.loader-pct{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.7rem;color:var(--dim);letter-spacing:.1em;
-}
-
-/* ─── NAV ─── */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;justify-content:space-between;align-items:center;
-  padding:1.4rem 4rem;
-  transition:background .4s,padding .4s;
-}
-nav.scrolled{background:rgba(8,8,16,.85);backdrop-filter:blur(20px);padding:1rem 4rem;border-bottom:1px solid var(--line);}
-.nav-logo{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:1.6rem;letter-spacing:.12em;
-  color:var(--text);text-decoration:none;
-}
-.nav-logo span{color:var(--o);}
-.nav-links{display:flex;gap:2.5rem;list-style:none;}
-.nav-links a{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;
-  color:var(--dim);text-decoration:none;
-  position:relative;transition:color .25s;
-}
-.nav-links a::after{
-  content:'';position:absolute;bottom:-4px;left:0;right:0;
-  height:1px;background:var(--o);transform:scaleX(0);
-  transform-origin:left;transition:transform .3s;
-}
-.nav-links a:hover{color:var(--text);}
-.nav-links a:hover::after{transform:scaleX(1);}
-.nav-hire{
-  padding:.5rem 1.4rem;
-  background:var(--o);color:#fff;
-  font-family:'JetBrains Mono',monospace;
-  font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;
-  text-decoration:none;border-radius:2px;
-  transition:background .2s,transform .2s;
-}
-.nav-hire:hover{background:#e85520;transform:translateY(-1px);}
-
-/* ─── HERO ─── */
-.hero{
-  min-height:100vh;display:grid;
-  grid-template-columns:1fr 1fr;
-  align-items:center;
-  padding:0 4rem;
-  position:relative;overflow:hidden;
-  gap:4rem;
-}
-/* Animated bg grid */
-.hero-bg{
-  position:absolute;inset:0;
-  background-image:
-    linear-gradient(var(--line) 1px,transparent 1px),
-    linear-gradient(90deg,var(--line) 1px,transparent 1px);
+/* hero grid bg */
+@keyframes gridDrift{0%{background-position:0 0;}100%{background-position:80px 80px;}}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+@keyframes pulse-dot{0%,100%{opacity:1;}50%{opacity:.2;}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+.hero-grid{
+  background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
   background-size:80px 80px;
   animation:gridDrift 20s linear infinite;
-  mask-image:radial-gradient(ellipse 70% 80% at 60% 50%,black,transparent);
+  -webkit-mask-image:radial-gradient(ellipse 75% 85% at 55% 50%,black,transparent);
+  mask-image:radial-gradient(ellipse 75% 85% at 55% 50%,black,transparent);
 }
-@keyframes gridDrift{0%{background-position:0 0;}100%{background-position:80px 80px;}}
+/* glow orbs */
+.orb1{background:radial-gradient(circle,rgba(255,107,53,.18),transparent 70%);filter:blur(70px);}
+.orb2{background:radial-gradient(circle,rgba(0,212,170,.1),transparent 70%);filter:blur(60px);}
 
-.hero-orb{
-  position:absolute;
-  border-radius:50%;
-  filter:blur(80px);
-  pointer-events:none;
-}
-.hero-orb1{width:500px;height:500px;background:radial-gradient(circle,rgba(255,107,53,.18),transparent 70%);top:-100px;right:0;}
-.hero-orb2{width:350px;height:350px;background:radial-gradient(circle,rgba(0,212,170,.1),transparent 70%);bottom:0;left:20%;}
+/* nav underline */
+.nav-link{position:relative;}
+.nav-link::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--o);transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+.nav-link:hover::after,.nav-link.active::after{transform:scaleX(1);}
 
-.hero-left{position:relative;z-index:2;}
-.hero-badge{
-  display:inline-flex;align-items:center;gap:.6rem;
-  padding:.4rem 1rem;
-  border:1px solid rgba(0,212,170,.3);
-  background:rgba(0,212,170,.07);
-  border-radius:100px;
-  font-family:'JetBrains Mono',monospace;
-  font-size:.6rem;letter-spacing:.12em;
-  color:var(--teal);margin-bottom:2rem;
-}
-.badge-dot{width:6px;height:6px;background:var(--teal);border-radius:50%;animation:blink 2s ease-in-out infinite;}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+/* terminal */
+.terminal-body{font-family:'JetBrains Mono',monospace;font-size:.75rem;line-height:2.1;}
+.t-comment{color:#4a4a7a;}.t-key{color:var(--o2);}.t-val{color:var(--teal);}.t-str{color:#a8d8a8;}.t-num{color:#c792ea;}
+.t-cursor{display:inline-block;width:8px;height:14px;background:var(--o);vertical-align:middle;margin-left:2px;animation:blink 1s step-end infinite;}
 
-.hero-pre{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--o);margin-bottom:1rem;
-  display:flex;align-items:center;gap:1rem;
-}
-.hero-pre::before{content:'';width:40px;height:1px;background:var(--o);}
-
-.hero-name{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(4rem,9vw,9rem);
-  line-height:.9;letter-spacing:.03em;
-  margin-bottom:1.5rem;
-}
-.hero-name .l1{display:block;color:var(--text);}
-.hero-name .l2{
-  display:block;
-  color:transparent;
-  -webkit-text-stroke:1.5px var(--o);
-  position:relative;
-}
-
-.hero-tagline{
-  font-family:'Crimson Pro',serif;
-  font-style:italic;font-size:1.5rem;
-  color:var(--dim);margin-bottom:2rem;
-  line-height:1.5;
-}
-.hero-tagline strong{color:var(--o2);font-style:normal;}
-
-.hero-desc{
-  font-family:'JetBrains Mono',monospace;font-weight:300;
-  font-size:.78rem;line-height:1.9;color:var(--dim);
-  max-width:420px;margin-bottom:3rem;
-}
-
-.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;}
-.btn-main{
-  padding:.85rem 2.2rem;
-  background:var(--o);color:#fff;
-  font-family:'JetBrains Mono',monospace;
-  font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
-  text-decoration:none;border-radius:var(--r);
-  display:inline-flex;align-items:center;gap:.6rem;
-  transition:all .25s;position:relative;overflow:hidden;
-}
-.btn-main::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);
-  opacity:0;transition:opacity .25s;
-}
-.btn-main:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(255,107,53,.35);}
-.btn-main:hover::before{opacity:1;}
-.btn-ghost{
-  padding:.85rem 2.2rem;
-  background:transparent;color:var(--text);
-  font-family:'JetBrains Mono',monospace;
-  font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
-  text-decoration:none;border-radius:var(--r);
-  border:1px solid var(--line);
-  display:inline-flex;align-items:center;gap:.6rem;
-  transition:all .25s;
-}
-.btn-ghost:hover{border-color:var(--o);color:var(--o);transform:translateY(-3px);}
-
-/* hero right - terminal card */
-.hero-right{position:relative;z-index:2;}
-.terminal{
-  background:var(--surface);
-  border:1px solid var(--line);
-  border-radius:12px;
-  overflow:hidden;
-  box-shadow:0 40px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.03);
-}
-.terminal-bar{
-  display:flex;align-items:center;gap:.5rem;
-  padding:.8rem 1.2rem;
-  background:rgba(255,255,255,.03);
-  border-bottom:1px solid var(--line);
-}
-.terminal-dot{width:12px;height:12px;border-radius:50%;}
-.td1{background:#ff5f57;}.td2{background:#ffbc2e;}.td3{background:#28c840;}
-.terminal-title{
-  font-family:'JetBrains Mono',monospace;font-size:.65rem;
-  color:var(--dim);margin-left:auto;letter-spacing:.08em;
-}
-.terminal-body{padding:1.5rem;font-family:'JetBrains Mono',monospace;font-size:.75rem;line-height:2;}
-.t-comment{color:#4a4a7a;}
-.t-key{color:var(--o2);}
-.t-val{color:var(--teal);}
-.t-str{color:#a8d8a8;}
-.t-num{color:#c792ea;}
-.t-cursor{
-  display:inline-block;width:8px;height:14px;
-  background:var(--o);
-  animation:blink 1s step-end infinite;
-  vertical-align:middle;margin-left:2px;
-}
-
-/* stats row */
-.hero-stats{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:1px;background:var(--line);
-  border:1px solid var(--line);border-radius:var(--r);
-  overflow:hidden;margin-top:3rem;
-}
-.hero-stat{
-  background:var(--ink);
-  padding:1.5rem;text-align:center;
-  transition:background .25s;
-}
-.hero-stat:hover{background:var(--surface);}
-.stat-n{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:2.8rem;line-height:1;
-  color:var(--o);
-}
-.stat-l{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.55rem;letter-spacing:.12em;
-  color:var(--dim);text-transform:uppercase;margin-top:.3rem;
-}
-
-/* ─── SECTION BASE ─── */
-.section{padding:8rem 4rem;max-width:1300px;margin:0 auto;}
-.section-full{padding:8rem 4rem;}
-
-.s-eyebrow{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--o);display:flex;align-items:center;gap:1rem;
-  margin-bottom:.75rem;
-}
-.s-eyebrow::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--line),transparent);max-width:120px;}
-
-.s-title{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(3rem,6vw,6rem);
-  line-height:.95;letter-spacing:.02em;
-  margin-bottom:4rem;
-}
-.s-title em{color:var(--o);font-style:normal;}
-
-/* ─── EXPERIENCE ─── */
-.exp-wrapper{display:grid;grid-template-columns:280px 1fr;gap:4rem;align-items:start;}
-.exp-tabs{display:flex;flex-direction:column;gap:.25rem;}
-.exp-tab{
-  padding:.9rem 1.4rem;
-  font-family:'JetBrains Mono',monospace;font-size:.72rem;
-  color:var(--dim);cursor:pointer;
-  border-left:2px solid transparent;
-  transition:all .25s;border-radius:0 var(--r) var(--r) 0;
-  text-align:left;background:none;border-top:none;border-right:none;border-bottom:none;
-}
-.exp-tab:hover{color:var(--text);background:var(--surface);}
-.exp-tab.active{
-  color:var(--o);border-left-color:var(--o);
-  background:var(--surface);
-}
-.exp-tab .tab-co{display:block;font-size:.9rem;font-weight:500;color:inherit;margin-bottom:.2rem;}
-.exp-tab .tab-period{font-size:.58rem;letter-spacing:.08em;color:var(--dim);}
-
-.exp-panel{display:none;animation:fadeIn .4s ease;}
+/* exp tab */
+.exp-tab{border-left:2px solid transparent;transition:all .15s;}
+.exp-tab.active{border-left-color:var(--o);background:rgba(255,107,53,.07);color:#ff6b35;}
+.exp-panel{display:none;animation:fadeUp .4s ease forwards;}
 .exp-panel.active{display:block;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
-.exp-role{font-size:1.6rem;font-weight:600;color:var(--text);margin-bottom:.2rem;}
-.exp-co{
-  font-family:'JetBrains Mono',monospace;font-size:.72rem;
-  color:var(--o);letter-spacing:.08em;margin-bottom:1.5rem;
-}
-.exp-bullets{list-style:none;display:flex;flex-direction:column;gap:.8rem;}
-.exp-bullets li{
-  display:flex;gap:1rem;align-items:flex-start;
-  font-size:1rem;line-height:1.7;color:#b0b0cc;
-}
-.exp-bullets li::before{
-  content:'▸';color:var(--o);flex-shrink:0;margin-top:.1rem;
-}
-.exp-bullets b{color:var(--text);}
-.exp-chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:2rem;}
-.chip{
-  padding:.3rem .75rem;
-  background:rgba(255,107,53,.08);
-  border:1px solid rgba(255,107,53,.2);
-  border-radius:100px;
-  font-family:'JetBrains Mono',monospace;
-  font-size:.6rem;letter-spacing:.06em;color:var(--o2);
-}
+/* skill tag hover */
+.sk-tag{transition:all .2s;}
+.sk-tag:hover,.sk-tag.hot{background:rgba(255,107,53,.1);border-color:rgba(255,107,53,.3);color:var(--o2);}
 
-/* ─── SKILLS ─── */
-.skills-bg{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
-.skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;}
-@media(max-width:900px){.skills-grid{grid-template-columns:1fr 1fr;}}
-.skill-block{
-  background:var(--ink);padding:2rem;
-  transition:background .3s;position:relative;overflow:hidden;
-}
-.skill-block::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,107,53,.06),transparent);
-  opacity:0;transition:opacity .3s;
-}
-.skill-block:hover{background:var(--card);}
-.skill-block:hover::before{opacity:1;}
-.sk-label{
-  font-family:'JetBrains Mono',monospace;font-size:.58rem;
-  letter-spacing:.18em;text-transform:uppercase;
-  color:var(--o);margin-bottom:1.2rem;
-  display:flex;align-items:center;gap:.6rem;
-}
-.sk-label svg{opacity:.7;}
-.sk-tags{display:flex;flex-wrap:wrap;gap:.4rem;}
-.sk-tag{
-  padding:.28rem .65rem;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:var(--r);
-  font-family:'JetBrains Mono',monospace;font-size:.62rem;
-  color:var(--dim);
-  transition:all .2s;
-}
-.sk-tag:hover,.sk-tag.hot{
-  background:rgba(255,107,53,.1);
-  border-color:rgba(255,107,53,.3);
-  color:var(--o2);
-}
-
-/* ─── PROJECTS ─── */
-.proj-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5px;background:var(--line);}
-@media(max-width:768px){.proj-grid{grid-template-columns:1fr;}}
-.proj-card{
-  background:var(--ink);
-  padding:2.5rem;
-  position:relative;overflow:hidden;
-  transition:background .3s;
-  group:true;
-}
-.proj-card:hover{background:var(--card);}
-.proj-card::after{
-  content:'';
-  position:absolute;bottom:0;left:0;right:0;height:2px;
-  background:linear-gradient(to right,var(--o),var(--o2));
-  transform:scaleX(0);transform-origin:left;
-  transition:transform .4s ease;
-}
+/* project card */
+.proj-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--o),var(--o2));transform:scaleX(0);transform-origin:left;transition:transform .4s;}
 .proj-card:hover::after{transform:scaleX(1);}
+.proj-arrow{transition:background .15s,border-color .15s,color .15s;}
+.proj-card:hover .proj-arrow{background:var(--o);border-color:var(--o);color:#fff;}
 
-.proj-idx{
-  font-family:'JetBrains Mono',monospace;font-size:.58rem;
-  letter-spacing:.15em;color:var(--dim);margin-bottom:1.2rem;
-}
-.proj-name{
-  font-family:'Bebas Neue',sans-serif;font-size:1.8rem;
-  letter-spacing:.04em;color:var(--text);margin-bottom:.75rem;
-  line-height:1;
-}
-.proj-desc{
-  font-size:.9rem;line-height:1.75;color:var(--dim);
-  font-family:'Crimson Pro',serif;margin-bottom:1.5rem;
-}
-.proj-tags{display:flex;flex-wrap:wrap;gap:.4rem;}
-.proj-tag{
-  padding:.2rem .6rem;
-  background:rgba(0,212,170,.07);
-  border:1px solid rgba(0,212,170,.15);
-  border-radius:2px;
-  font-family:'JetBrains Mono',monospace;font-size:.58rem;
-  letter-spacing:.06em;color:var(--teal);
-}
-.proj-arrow{
-  position:absolute;top:2rem;right:2rem;
-  width:32px;height:32px;
-  border:1px solid var(--line);border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  color:var(--dim);font-size:1rem;
-  transition:all .25s;
-}
-.proj-card:hover .proj-arrow{
-  background:var(--o);border-color:var(--o);color:#fff;
-  transform:rotate(45deg);
-}
-
-/* feat project (first card) */
-.proj-card.feat{grid-column:span 2;}
-@media(max-width:768px){.proj-card.feat{grid-column:span 1;}}
-.proj-card.feat .proj-name{font-size:2.8rem;}
-
-/* ─── ABOUT / PERSONAL ─── */
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;}
-.about-left .big-q{
-  font-family:'Crimson Pro',serif;font-style:italic;
-  font-size:clamp(2.5rem,5vw,4.5rem);
-  line-height:1.1;color:var(--text);margin-bottom:2rem;
-}
-.about-left .big-q span{color:var(--o);}
-.about-body{
-  font-size:1.05rem;line-height:1.85;color:#a0a0c0;
-  font-family:'Crimson Pro',serif;
-}
-.about-body p+p{margin-top:1.2rem;}
-.about-right{display:flex;flex-direction:column;gap:1.5rem;}
-.about-card{
-  padding:1.5rem 2rem;
-  background:var(--surface);
-  border:1px solid var(--line);border-radius:var(--r);
-  display:flex;gap:1.5rem;align-items:flex-start;
-  transition:border-color .25s,transform .25s;
-}
+/* about card */
+.about-card{transition:all .15s;}
 .about-card:hover{border-color:rgba(255,107,53,.3);transform:translateX(6px);}
-.ac-icon{font-size:1.8rem;flex-shrink:0;}
-.ac-title{font-weight:600;color:var(--text);margin-bottom:.25rem;}
-.ac-detail{
-  font-family:'JetBrains Mono',monospace;font-size:.65rem;
-  color:var(--dim);line-height:1.6;letter-spacing:.04em;
-}
 
-/* ─── ACHIEVEMENTS ─── */
-.ach-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;}
-@media(max-width:768px){.ach-grid{grid-template-columns:1fr 1fr;}}
-.ach-card{
-  background:var(--ink);padding:2rem;
-  transition:background .25s;
-  position:relative;
-}
-.ach-card:hover{background:var(--card);}
-.ach-num{
+/* magnetic */
+.magnetic{transition:transform .15s ease;}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .8s ease,transform .8s ease;}
+.reveal.in{opacity:1;transform:translateY(0);}
+
+/* loader */
+#loader-bar{width:0%;transition:width .08s linear;}
+
+/* contact bg text */
+.contact-ghost{
   font-family:'Bebas Neue',sans-serif;
-  font-size:4rem;line-height:1;
-  color:rgba(255,107,53,.12);
-  position:absolute;top:.5rem;right:1rem;
-  pointer-events:none;
-}
-.ach-icon{font-size:1.6rem;margin-bottom:.75rem;}
-.ach-title{font-weight:600;font-size:1rem;color:var(--text);margin-bottom:.3rem;}
-.ach-sub{
-  font-family:'JetBrains Mono',monospace;font-size:.62rem;
-  color:var(--dim);line-height:1.6;letter-spacing:.04em;
-}
-
-/* ─── EDUCATION ─── */
-.edu-list{display:flex;flex-direction:column;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;}
-.edu-row{
-  background:var(--ink);
-  display:grid;grid-template-columns:1fr auto;
-  align-items:center;
-  padding:2rem 2.5rem;gap:2rem;
-  transition:background .25s;
-}
-.edu-row:hover{background:var(--card);}
-.edu-deg{font-size:1.2rem;font-weight:600;color:var(--text);margin-bottom:.25rem;}
-.edu-school{
-  font-family:'JetBrains Mono',monospace;font-size:.65rem;
-  color:var(--o);letter-spacing:.06em;
-}
-.edu-yr{
-  font-family:'JetBrains Mono',monospace;font-size:.62rem;
-  color:var(--dim);margin-top:.2rem;
-}
-.edu-score{
-  padding:.4rem .9rem;
-  background:rgba(255,170,76,.1);
-  border:1px solid rgba(255,170,76,.25);
-  border-radius:100px;
-  font-family:'JetBrains Mono',monospace;
-  font-size:.68rem;letter-spacing:.06em;
-  color:var(--o2);white-space:nowrap;
-}
-
-/* ─── CONTACT ─── */
-.contact-wrap{
-  text-align:center;
-  padding:8rem 4rem;
-  position:relative;overflow:hidden;
-}
-.contact-bg-text{
-  position:absolute;
-  font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(8rem,20vw,22rem);
+  font-size:clamp(6rem,18vw,20rem);
   letter-spacing:.1em;
   color:transparent;
   -webkit-text-stroke:1px rgba(255,107,53,.06);
-  top:50%;left:50%;transform:translate(-50%,-50%);
-  pointer-events:none;white-space:nowrap;
-  user-select:none;
-}
-.contact-eyebrow{
-  font-family:'JetBrains Mono',monospace;font-size:.65rem;
-  letter-spacing:.2em;text-transform:uppercase;
-  color:var(--o);margin-bottom:1.5rem;
-}
-.contact-headline{
-  font-family:'Bebas Neue',sans-serif;
-  font-size:clamp(4rem,10vw,10rem);
-  line-height:.9;letter-spacing:.02em;
-  margin-bottom:3rem;position:relative;
-}
-.contact-headline .outline{
-  color:transparent;
-  -webkit-text-stroke:2px rgba(255,107,53,.5);
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  pointer-events:none;white-space:nowrap;user-select:none;
 }
 
-.contact-grid{
-  display:flex;justify-content:center;flex-wrap:wrap;gap:1rem;
-  position:relative;
-}
-.c-link{
-  display:inline-flex;align-items:center;gap:.75rem;
-  padding:1rem 2rem;
-  background:var(--surface);
-  border:1px solid var(--line);border-radius:var(--r);
-  color:var(--text);text-decoration:none;
-  font-family:'JetBrains Mono',monospace;font-size:.72rem;
-  letter-spacing:.08em;
-  transition:all .25s;
-}
-.c-link:hover{
-  background:var(--o);border-color:var(--o);
-  transform:translateY(-4px);
-  box-shadow:0 16px 40px rgba(255,107,53,.3);
-}
-.c-icon{
-  width:36px;height:36px;border-radius:50%;
-  background:rgba(255,107,53,.12);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1rem;flex-shrink:0;
-}
-.c-link:hover .c-icon{background:rgba(255,255,255,.15);}
+/* outline text */
+.text-outline{color:transparent;-webkit-text-stroke:2px rgba(255,107,53,.5);}
 
-/* ─── FOOTER ─── */
-footer{
-  padding:2rem 4rem;
-  display:flex;justify-content:space-between;align-items:center;
-  border-top:1px solid var(--line);flex-wrap:wrap;gap:1rem;
-}
-footer p{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.6rem;color:var(--dim);letter-spacing:.06em;
-}
-footer a{color:var(--o);text-decoration:none;}
+/* hero name outline */
+.name-outline{color:transparent;-webkit-text-stroke:1.5px var(--o);display:block;}
 
 /* marquee */
-.marquee-wrap{
-  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
-  overflow:hidden;padding:1rem 0;background:var(--paper);
-}
-.marquee-track{
-  display:flex;gap:4rem;width:max-content;
-  animation:marquee 28s linear infinite;
-}
-@keyframes marquee{0%{transform:translateX(0);}100%{transform:translateX(-50%);}  }
-.marquee-item{
-  font-family:'JetBrains Mono',monospace;font-size:.65rem;
-  letter-spacing:.15em;text-transform:uppercase;
-  color:var(--dim);white-space:nowrap;
-  display:flex;align-items:center;gap:1rem;
-}
-.marquee-item span{color:var(--o);font-size:.8rem;}
+.marquee-track{display:flex;width:max-content;animation:marquee 30s linear infinite;}
+@keyframes marquee{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
 
-/* scroll reveal */
-.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s ease,transform .8s ease;}
-.reveal.visible{opacity:1;transform:translateY(0);}
+/* scrollbar */
+::-webkit-scrollbar-track{background:#080810;}
 
-/* responsive */
 @media(max-width:1024px){
-  .hero{grid-template-columns:1fr;padding:8rem 2rem 4rem;text-align:center;}
-  .hero-right{display:none;}
-  .hero-pre{justify-content:center;}
-  .hero-badge{margin:0 auto 2rem;}
-  .hero-desc{margin:0 auto 3rem;}
-  .hero-actions{justify-content:center;}
-  .hero-stats{grid-template-columns:repeat(2,1fr);}
-  nav{padding:1.2rem 2rem;}
-  nav.scrolled{padding:1rem 2rem;}
-  .nav-links{display:none;}
-  .exp-wrapper{grid-template-columns:1fr;gap:2rem;}
-  .exp-tabs{flex-direction:row;overflow-x:auto;}
-  .about-grid{grid-template-columns:1fr;}
-  .ach-grid{grid-template-columns:1fr 1fr;}
-  .section,.section-full{padding:5rem 2rem;}
-  .skills-grid{grid-template-columns:1fr 1fr;}
+  body{cursor:auto;}
+  #cur,#cur-ring{display:none;}
 }
-@media(max-width:600px){
-  .proj-grid,.ach-grid,.skills-grid{grid-template-columns:1fr;}
-  .proj-card.feat{grid-column:span 1;}
-  .proj-card.feat .proj-name{font-size:2rem;}
-  footer{flex-direction:column;text-align:center;}
+@media(max-width:768px){
+  .hero-terminal{display:none;}
+  .exp-tabs{flex-direction:row!important;overflow-x:auto;}
+  .exp-tab{white-space:nowrap;}
+  .skills-3{grid-template-columns:1fr 1fr!important;}
+  .proj-feat{grid-column:span 1!important;}
 }
 </style>
 </head>
-<body>
-
-<!-- LOADER -->
-<div id="loader">
-  <div class="loader-name" id="loaderName">KK</div>
-  <div class="loader-bar-wrap"><div class="loader-bar" id="loaderBar"></div></div>
-  <div class="loader-pct" id="loaderPct">0%</div>
-</div>
+<body class="bg-ink text-white font-body antialiased overflow-x-hidden">
 
 <!-- CURSOR -->
 <div id="cur"></div>
 <div id="cur-ring"></div>
 
+<!-- LOADER -->
+<div id="loader" class="fixed inset-0 bg-ink z-[10000] flex flex-col items-center justify-center gap-4">
+  <div class="font-display text-7xl tracking-widest text-o">KK</div>
+  <div class="w-48 h-0.5 bg-white/10 rounded-full overflow-hidden">
+    <div id="loader-bar" class="h-full bg-gradient-to-r from-o to-o2 rounded-full"></div>
+  </div>
+  <div id="loader-pct" class="font-mono text-xs text-dim tracking-widest">0%</div>
+</div>
+
 <!-- NAV -->
-<nav id="nav">
-  <a class="nav-logo" href="#"><span>K</span>ATHIRAVAN</a>
-  <ul class="nav-links">
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#contact">Contact</a></li>
+<nav id="nav" class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-5 transition-all duration-300">
+  <a href="#home" class="font-display text-2xl tracking-widest text-white"><span class="text-o">K</span>ATHIRAVAN</a>
+  <ul class="hidden lg:flex items-center gap-8 list-none">
+    <li><a href="#experience" class="nav-link font-mono text-[.62rem] tracking-widest uppercase text-dim hover:text-white transition-colors">Experience</a></li>
+    <li><a href="#skills" class="nav-link font-mono text-[.62rem] tracking-widest uppercase text-dim hover:text-white transition-colors">Skills</a></li>
+    <li><a href="#projects" class="nav-link font-mono text-[.62rem] tracking-widest uppercase text-dim hover:text-white transition-colors">Projects</a></li>
+    <li><a href="#about" class="nav-link font-mono text-[.62rem] tracking-widest uppercase text-dim hover:text-white transition-colors">About</a></li>
+    <li><a href="#contact" class="nav-link font-mono text-[.62rem] tracking-widest uppercase text-dim hover:text-white transition-colors">Contact</a></li>
   </ul>
-  <a href="mailto:kkathiravan709@gmail.com" class="nav-hire">Hire Me</a>
+  <a href="mailto:kkathiravan709@gmail.com" class="magnetic hidden lg:inline-flex items-center gap-2 px-5 py-2 bg-o text-white font-mono text-[.65rem] tracking-widest uppercase rounded-sm hover:bg-[#e85520] transition-colors">
+    Hire Me
+  </a>
+  <!-- mobile menu btn -->
+  <button id="mob-btn" class="lg:hidden flex flex-col gap-1.5 p-2">
+    <span class="block w-6 h-0.5 bg-white transition-all"></span>
+    <span class="block w-6 h-0.5 bg-white transition-all"></span>
+    <span class="block w-4 h-0.5 bg-white transition-all"></span>
+  </button>
 </nav>
+<!-- mobile menu -->
+<div id="mob-menu" class="fixed inset-0 bg-ink z-40 flex-col items-center justify-center gap-8 hidden lg:hidden">
+  <a href="#experience" class="mob-link font-display text-5xl tracking-widest text-white hover:text-o transition-colors">Experience</a>
+  <a href="#skills" class="mob-link font-display text-5xl tracking-widest text-white hover:text-o transition-colors">Skills</a>
+  <a href="#projects" class="mob-link font-display text-5xl tracking-widest text-white hover:text-o transition-colors">Projects</a>
+  <a href="#about" class="mob-link font-display text-5xl tracking-widest text-white hover:text-o transition-colors">About</a>
+  <a href="#contact" class="mob-link font-display text-5xl tracking-widest text-white hover:text-o transition-colors">Contact</a>
+</div>
 
-<!-- HERO -->
-<section class="hero" id="home">
-  <div class="hero-bg"></div>
-  <div class="hero-orb hero-orb1"></div>
-  <div class="hero-orb hero-orb2"></div>
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section id="home" class="relative min-h-screen grid lg:grid-cols-2 items-center gap-12 px-8 lg:px-16 pt-24 pb-16 overflow-hidden">
+  <!-- bg -->
+  <div class="hero-grid absolute inset-0 pointer-events-none"></div>
+  <div class="orb1 absolute w-[500px] h-[500px] -top-24 right-0 pointer-events-none rounded-full"></div>
+  <div class="orb2 absolute w-[350px] h-[350px] bottom-0 left-[15%] pointer-events-none rounded-full"></div>
 
-  <div class="hero-left">
-    <div class="hero-badge">
-      <span class="badge-dot"></span>
+  <!-- LEFT -->
+  <div class="relative z-10" id="hero-content">
+    <!-- badge -->
+    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-teal/30 bg-teal/5 font-mono text-[.6rem] tracking-widest text-teal mb-6">
+      <span class="w-1.5 h-1.5 rounded-full bg-teal animate-[pulse-dot_2s_ease-in-out_infinite]"></span>
       Available for New Opportunities
     </div>
 
-    <div class="hero-pre">Software Developer II</div>
+    <p class="font-mono text-[.65rem] tracking-[.2em] uppercase text-o flex items-center gap-3 mb-3">
+      <span class="w-8 h-px bg-o"></span>Software Developer II
+    </p>
 
-    <h1 class="hero-name">
-      <span class="l1">KATHIRA</span>
-      <span class="l2">VAN K.</span>
+    <h1 class="font-display leading-[.9] tracking-wider mb-5">
+      <span class="block text-white" style="font-size:clamp(4rem,9vw,9rem)">KATHIRAVAN K</span>
     </h1>
 
-    <p class="hero-tagline">
-      Full-Stack Engineer crafting <strong>scalable systems</strong><br/>
-      for the future of <strong>Healthcare Technology</strong>
+    <p class="font-body italic text-2xl lg:text-3xl text-dim leading-relaxed mb-5">
+      Full-Stack Engineer crafting <strong class="text-o2 not-italic">scalable systems</strong><br/>
+      for the future of <strong class="text-o2 not-italic">Healthcare Technology</strong>
     </p>
 
-    <p class="hero-desc">
+    <p class="font-mono text-sm leading-loose text-dim max-w-md mb-8">
       3+ years building HIS platforms, SaaS products &amp;<br/>
-      real-time clinical applications across PHP · Laravel<br/>
-      .NET Core · Angular · MySQL · WebRTC
+      real-time clinical apps · PHP · Laravel · .NET Core · Angular
     </p>
 
-    <div class="hero-actions">
-      <a href="#contact" class="btn-main">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+    <div class="flex flex-wrap gap-3">
+      <a href="#contact" class="magnetic inline-flex items-center gap-2 px-6 py-3 bg-o text-white font-mono text-[.7rem] tracking-widest uppercase rounded-sm hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(255,107,53,.35)] transition-all">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         Get In Touch
       </a>
-      <a href="#projects" class="btn-ghost">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      <a href="#projects" class="magnetic inline-flex items-center gap-2 px-6 py-3 bg-transparent text-white font-mono text-[.7rem] tracking-widest uppercase rounded-sm border border-white/10 hover:border-o hover:text-o hover:-translate-y-1 transition-all">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
         View Projects
       </a>
     </div>
 
-    <div class="hero-stats">
-      <div class="hero-stat"><div class="stat-n">3+</div><div class="stat-l">Years Exp</div></div>
-      <div class="hero-stat"><div class="stat-n">40+</div><div class="stat-l">HIS Modules</div></div>
-      <div class="hero-stat"><div class="stat-n">10K+</div><div class="stat-l">Users Served</div></div>
-      <div class="hero-stat"><div class="stat-n">50%</div><div class="stat-l">Perf Gains</div></div>
+    <!-- stats -->
+    <div class="grid grid-cols-4 mt-10 border border-white/7 rounded-sm overflow-hidden">
+      <div class="stat-card bg-ink hover:bg-surface transition-colors p-4 text-center border-r border-white/7">
+        <div class="font-display text-5xl text-o" data-count="3" data-suffix="+">3+</div>
+        <div class="font-mono text-xs tracking-widest uppercase text-dim mt-1">Years Exp</div>
+      </div>
+      <div class="stat-card bg-ink hover:bg-surface transition-colors p-4 text-center border-r border-white/7">
+        <div class="font-display text-5xl text-o" data-count="40" data-suffix="+">40+</div>
+        <div class="font-mono text-xs tracking-widest uppercase text-dim mt-1">HIS Modules</div>
+      </div>
+      <div class="stat-card bg-ink hover:bg-surface transition-colors p-4 text-center border-r border-white/7">
+        <div class="font-display text-5xl text-o" data-count="10" data-suffix="K+">10K+</div>
+        <div class="font-mono text-xs tracking-widest uppercase text-dim mt-1">Users Served</div>
+      </div>
+      <div class="stat-card bg-ink hover:bg-surface transition-colors p-4 text-center">
+        <div class="font-display text-5xl text-o" data-count="50" data-suffix="%">50%</div>
+        <div class="font-mono text-xs tracking-widest uppercase text-dim mt-1">Perf Gains</div>
+      </div>
     </div>
   </div>
 
-  <!-- Terminal Card -->
-  <div class="hero-right">
-    <div class="terminal">
-      <div class="terminal-bar">
-        <div class="terminal-dot td1"></div>
-        <div class="terminal-dot td2"></div>
-        <div class="terminal-dot td3"></div>
-        <span class="terminal-title">profile.json</span>
+  <!-- RIGHT – Terminal -->
+  <div class="hero-terminal relative z-10">
+    <div class="bg-surface border border-white/7 rounded-xl overflow-hidden shadow-[0_40px_80px_rgba(0,0,0,.6)]">
+      <div class="flex items-center gap-2 px-4 py-3 bg-white/[.03] border-b border-white/7">
+        <span class="w-3 h-3 rounded-full bg-[#ff5f57]"></span>
+        <span class="w-3 h-3 rounded-full bg-[#ffbc2e]"></span>
+        <span class="w-3 h-3 rounded-full bg-[#28c840]"></span>
+        <span class="font-mono text-[.6rem] text-dim ml-auto tracking-widest">profile.json</span>
       </div>
-      <div class="terminal-body">
+      <div class="terminal-body p-6 text-[.75rem]">
 <span class="t-comment">// Kathiravan Kamaraj</span><br/>
 {<br/>
 &nbsp;&nbsp;<span class="t-key">"role"</span>: <span class="t-str">"Software Developer II"</span>,<br/>
-&nbsp;&nbsp;<span class="t-key">"location"</span>: <span class="t-str">"Chennai, India"</span>,<br/>
+&nbsp;&nbsp;<span class="t-key">"location"</span>: <span class="t-str">"Chennai, India 🇮🇳"</span>,<br/>
 &nbsp;&nbsp;<span class="t-key">"experience"</span>: <span class="t-num">3</span>,<br/>
-&nbsp;&nbsp;<span class="t-key">"currentOrg"</span>: <span class="t-str">"Kranium Health"</span>,<br/>
+&nbsp;&nbsp;<span class="t-key">"current"</span>: <span class="t-str">"Kranium Health"</span>,<br/>
 &nbsp;&nbsp;<span class="t-key">"stack"</span>: [<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-str">"PHP 8"</span>, <span class="t-str">"Laravel"</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="t-str">".NET Core"</span>, <span class="t-str">"Angular"</span>,<br/>
@@ -732,7 +280,7 @@ footer a{color:var(--o);text-decoration:none;}
 &nbsp;&nbsp;],<br/>
 &nbsp;&nbsp;<span class="t-key">"domain"</span>: <span class="t-str">"Health Tech / SaaS"</span>,<br/>
 &nbsp;&nbsp;<span class="t-key">"openToWork"</span>: <span class="t-val">true</span>,<br/>
-&nbsp;&nbsp;<span class="t-key">"contact"</span>: <span class="t-str">"kkathiravan709@gmail.com"</span><br/>
+&nbsp;&nbsp;<span class="t-key">"email"</span>: <span class="t-str">"kkathiravan709@gmail.com"</span><br/>
 }<span class="t-cursor"></span>
       </div>
     </div>
@@ -740,514 +288,533 @@ footer a{color:var(--o);text-decoration:none;}
 </section>
 
 <!-- MARQUEE -->
-<div class="marquee-wrap">
+<div class="border-y border-white/7 bg-paper overflow-hidden py-3">
   <div class="marquee-track">
-    <div class="marquee-item"><span>✦</span> PHP 8 <span>✦</span> Laravel <span>✦</span> Angular <span>✦</span> .NET Core <span>✦</span> WebRTC <span>✦</span> ABDM Integration <span>✦</span> MySQL <span>✦</span> Solr <span>✦</span> RabbitMQ <span>✦</span> JWT Auth <span>✦</span> RESTful APIs <span>✦</span> Agile / Scrum <span>✦</span> TypeScript <span>✦</span> FHIR <span>✦</span></div>
-    <div class="marquee-item"><span>✦</span> PHP 8 <span>✦</span> Laravel <span>✦</span> Angular <span>✦</span> .NET Core <span>✦</span> WebRTC <span>✦</span> ABDM Integration <span>✦</span> MySQL <span>✦</span> Solr <span>✦</span> RabbitMQ <span>✦</span> JWT Auth <span>✦</span> RESTful APIs <span>✦</span> Agile / Scrum <span>✦</span> TypeScript <span>✦</span> FHIR <span>✦</span></div>
+    <div class="flex items-center gap-12 pr-12 font-mono text-[.6rem] tracking-widest uppercase text-dim whitespace-nowrap">
+      <span class="text-o">✦</span> PHP 8 <span class="text-o">✦</span> Laravel <span class="text-o">✦</span> Angular <span class="text-o">✦</span> .NET Core <span class="text-o">✦</span> WebRTC <span class="text-o">✦</span> ABDM APIs <span class="text-o">✦</span> MySQL <span class="text-o">✦</span> Solr <span class="text-o">✦</span> RabbitMQ <span class="text-o">✦</span> JWT Auth <span class="text-o">✦</span> REST APIs <span class="text-o">✦</span> Agile/Scrum <span class="text-o">✦</span> TypeScript <span class="text-o">✦</span> FHIR <span class="text-o">✦</span> PostgreSQL <span class="text-o">✦</span> Selenium
+    </div>
+    <div class="flex items-center gap-12 pr-12 font-mono text-[.6rem] tracking-widest uppercase text-dim whitespace-nowrap">
+      <span class="text-o">✦</span> PHP 8 <span class="text-o">✦</span> Laravel <span class="text-o">✦</span> Angular <span class="text-o">✦</span> .NET Core <span class="text-o">✦</span> WebRTC <span class="text-o">✦</span> ABDM APIs <span class="text-o">✦</span> MySQL <span class="text-o">✦</span> Solr <span class="text-o">✦</span> RabbitMQ <span class="text-o">✦</span> JWT Auth <span class="text-o">✦</span> REST APIs <span class="text-o">✦</span> Agile/Scrum <span class="text-o">✦</span> TypeScript <span class="text-o">✦</span> FHIR <span class="text-o">✦</span> PostgreSQL <span class="text-o">✦</span> Selenium
+    </div>
   </div>
 </div>
 
-<!-- EXPERIENCE -->
-<section class="section" id="experience">
-  <div class="s-eyebrow">01 / Experience</div>
-  <h2 class="s-title reveal">Where I've<br/><em>Made Impact</em></h2>
+<!-- ═══════════════════ EXPERIENCE ═══════════════════ -->
+<section id="experience" class="max-w-6xl mx-auto px-8 lg:px-16 py-28">
+  <p class="font-mono text-[.6rem] tracking-[.2em] uppercase text-o flex items-center gap-3 mb-2">
+    <span>01 / Experience</span>
+    <span class="flex-1 h-px bg-gradient-to-r from-white/7 to-transparent max-w-32"></span>
+  </p>
+  <h2 class="font-display text-[clamp(3rem,6vw,6rem)] leading-[.95] tracking-wide mb-14 reveal">
+    WHERE I'VE<br/><span class="text-o">MADE IMPACT</span>
+  </h2>
 
-  <div class="exp-wrapper reveal">
-    <div class="exp-tabs">
-      <button class="exp-tab active" onclick="switchTab(0)">
-        <span class="tab-co">Kranium Health</span>
-        <span class="tab-period">Dec 2023 — Present</span>
+  <div class="grid lg:grid-cols-[260px_1fr] gap-10 reveal">
+    <!-- tabs -->
+    <div id="exp-tabs" class="flex lg:flex-col gap-1">
+      <button class="exp-tab active text-left px-5 py-4 font-mono text-[.68rem] rounded-r-sm" data-tab="0">
+        <span class="block font-semibold text-base mb-0.5">Kranium Health</span>
+        <span class="text-dim text-xs tracking-wider">Dec 2023 — Present</span>
       </button>
-      <button class="exp-tab" onclick="switchTab(1)">
-        <span class="tab-co">Tamu Info Tech</span>
-        <span class="tab-period">Sep 2022 — Nov 2023</span>
+      <button class="exp-tab text-left px-5 py-4 font-mono text-[.68rem] rounded-r-sm" data-tab="1">
+        <span class="block font-semibold text-base mb-0.5">Tamu Info Tech</span>
+        <span class="text-dim text-xs tracking-wider">Sep 2022 — Nov 2023</span>
       </button>
     </div>
 
+    <!-- panels -->
     <div>
       <div class="exp-panel active" id="panel-0">
-        <div class="exp-role">Software Developer II</div>
-        <div class="exp-co">Kranium Health · Chennai</div>
-        <ul class="exp-bullets">
-          <li>Spearheaded development of <b>40+ Hospital Information System modules</b> using PHP, Laravel, Angular & jQuery for <b>10,000+ daily users</b></li>
-          <li>Delivered <b>4 mission-critical clinical modules</b> — Laboratory, MHC, Patient Portal & ABHA Integration — dramatically streamlining hospital workflows</li>
-          <li>Led <b>PHP 5.6 → 8.0 migration</b> improving security posture and runtime performance by <b>30%</b></li>
-          <li>Built analytics dashboards with <b>Spago BI & Jasper Reports</b>, cutting monthly reporting time by <b>50%</b></li>
-          <li>Architected a real-time <b>Teleconsultation platform</b> using WebRTC & WebSockets — enabling encrypted peer-to-peer clinical video sessions</li>
-          <li>Integrated <b>ABDM / ABHA APIs</b> complying with India's national health data exchange standards and FHIR / Fidelius protocols</li>
-          <li>Optimized <b>SQL queries, caching strategies & Solr search</b> for high throughput and sub-second response times</li>
-          <li>Applied <b>Agile / Scrum</b> — sprint planning, peer code reviews & unit testing for zero-defect deployments</li>
+        <h3 class="font-body text-3xl font-semibold text-white mb-1">Software Developer II</h3>
+        <p class="font-mono text-[.65rem] tracking-wider text-o mb-6">Kranium Health · Chennai, India</p>
+        <ul class="space-y-3 mb-6">
+          <li class="flex gap-3 text-lg text-dim leading-relaxed"><span class="text-o mt-0.5 shrink-0">▸</span>Spearheaded <strong class="text-white">40+ HIS modules</strong> using PHP, Laravel, Angular & jQuery for <strong class="text-white">10,000+ daily users</strong></li>
+          <li class="flex gap-3 text-lg text-dim leading-relaxed"><span class="text-o mt-0.5 shrink-0">▸</span>Delivered <strong class="text-white">4 clinical modules</strong> — Laboratory, MHC, Patient Portal, ABHA Integration — streamlining workflows</li>
+          <li class="flex gap-3 text-lg text-dim leading-relaxed"><span class="text-o mt-0.5 shrink-0">▸</span>Led <strong class="text-white">PHP 5.6 → 8.0 migration</strong>, improving security & performance by <strong class="text-white">30%</strong></li>
+          <li class="flex gap-3 text-lg text-dim leading-relaxed"><span class="text-o mt-0.5 shrink-0">▸</span>Built analytics with <strong class="text-white">Spago BI & Jasper Reports</strong>, cutting reporting time by <strong class="text-white">50%</strong></li>
+          <li class="flex gap-3 text-lg text-dim leading-relaxed"><span class="text-o mt-0.5 shrink-0">▸</span>Architected real-time <strong class="text-white">Teleconsultation platform</strong> via WebRTC & WebSockets for secure video sessions</li>
+          <li class="flex gap-3 text-lg text-dim leading-relaxed"><span class="text-o mt-0.5 shrink-0">▸</span>Integrated <strong class="text-white">ABDM/ABHA APIs</strong> compliant with national health data exchange standards & FHIR/Fidelius</li>
+          <li class="flex gap-3 text-lg text-dim leading-relaxed"><span class="text-o mt-0.5 shrink-0">▸</span>Optimized <strong class="text-white">SQL, caching & Solr search</strong> for sub-second response at scale</li>
         </ul>
-        <div class="exp-chips">
-          <span class="chip">PHP 8</span><span class="chip">Laravel</span><span class="chip">Angular</span>
-          <span class="chip">WebRTC</span><span class="chip">ABHA APIs</span><span class="chip">Solr</span>
-          <span class="chip">Jasper Reports</span><span class="chip">MySQL</span><span class="chip">FHIR</span>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-3 py-1 rounded-full bg-o/8 border border-o/20 font-mono text-[.58rem] tracking-wider text-o2">PHP 8</span>
+          <span class="px-3 py-1 rounded-full bg-o/8 border border-o/20 font-mono text-[.58rem] tracking-wider text-o2">Laravel</span>
+          <span class="px-3 py-1 rounded-full bg-o/8 border border-o/20 font-mono text-[.58rem] tracking-wider text-o2">Angular</span>
+          <span class="px-3 py-1 rounded-full bg-o/8 border border-o/20 font-mono text-[.58rem] tracking-wider text-o2">WebRTC</span>
+          <span class="px-3 py-1 rounded-full bg-o/8 border border-o/20 font-mono text-[.58rem] tracking-wider text-o2">ABHA API</span>
+          <span class="px-3 py-1 rounded-full bg-o/8 border border-o/20 font-mono text-[.58rem] tracking-wider text-o2">Solr</span>
+          <span class="px-3 py-1 rounded-full bg-o/8 border border-o/20 font-mono text-[.58rem] tracking-wider text-o2">MySQL</span>
+          <span class="px-3 py-1 rounded-full bg-o/8 border border-o/20 font-mono text-[.58rem] tracking-wider text-o2">FHIR</span>
         </div>
       </div>
 
       <div class="exp-panel" id="panel-1">
-        <div class="exp-role">Software Developer</div>
-        <div class="exp-co">Tamu Info Tech · Madurai, India</div>
-        <ul class="exp-bullets">
-          <li>Built full-stack enterprise systems end-to-end using <b>.NET Core, Angular, and PHP</b></li>
-          <li>Developed <b>Zuna</b> — a high-traffic e-commerce platform serving <b>10K+ monthly users</b> with JWT auth & role-based access control</li>
-          <li>Created a <b>modular Laravel CMS</b> with plugin architecture deployed across 10+ client sites, slashing setup time by <b>50%</b></li>
-          <li>Built an <b>ANPR system</b> using Python + OpenCV achieving <b>95% plate recognition accuracy</b></li>
-          <li>Collaborated with international developers on <b>Italia Rail</b>, following strict clean code & SOLID principles</li>
-          <li>Managed <b>Jira-based Agile sprints</b> and delivered secure content platforms for enterprise clients on schedule</li>
+        <h3 class="font-body text-3xl font-semibold text-white mb-1">Software Developer</h3>
+        <p class="font-mono text-[.65rem] tracking-wider text-o mb-6">Tamu Info Tech · Madurai, India</p>
+        <ul class="space-y-3 mb-6">
+          <li class="flex gap-3 text-lg text-dim leading-relaxed"><span class="text-o mt-0.5 shrink-0">▸</span>Built full-stack enterprise systems using <strong class="text-white">.NET Core, Angular & PHP</strong></li>
+          <li class="flex gap-3 text-lg text-dim leading-relaxed"><span class="text-o mt-0.5 shrink-0">▸</span>Developed <strong class="text-white">Zuna e-commerce platform</strong> — 10K+ monthly users with JWT auth & RBAC</li>
+          <li class="flex gap-3 text-lg text-dim leading-relaxed"><span class="text-o mt-0.5 shrink-0">▸</span>Created <strong class="text-white">Laravel CMS with plugin support</strong>, reducing client setup time by <strong class="text-white">50%</strong></li>
+          <li class="flex gap-3 text-lg text-dim leading-relaxed"><span class="text-o mt-0.5 shrink-0">▸</span>Built <strong class="text-white">ANPR system</strong> using Python + OpenCV with <strong class="text-white">95% recognition accuracy</strong></li>
+          <li class="flex gap-3 text-lg text-dim leading-relaxed"><span class="text-o mt-0.5 shrink-0">▸</span>Collaborated on <strong class="text-white">Italia Rail</strong> with international devs following clean code & SOLID principles</li>
+          <li class="flex gap-3 text-lg text-dim leading-relaxed"><span class="text-o mt-0.5 shrink-0">▸</span>Managed <strong class="text-white">Jira-based Agile sprints</strong> and delivered secure enterprise content platforms on schedule</li>
         </ul>
-        <div class="exp-chips">
-          <span class="chip">.NET Core</span><span class="chip">Angular</span><span class="chip">PHP</span>
-          <span class="chip">JWT</span><span class="chip">RBAC</span><span class="chip">Python</span>
-          <span class="chip">OpenCV</span><span class="chip">Jira</span><span class="chip">Laravel CMS</span>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-3 py-1 rounded-full bg-o/8 border border-o/20 font-mono text-[.58rem] tracking-wider text-o2">.NET Core</span>
+          <span class="px-3 py-1 rounded-full bg-o/8 border border-o/20 font-mono text-[.58rem] tracking-wider text-o2">Angular</span>
+          <span class="px-3 py-1 rounded-full bg-o/8 border border-o/20 font-mono text-[.58rem] tracking-wider text-o2">PHP</span>
+          <span class="px-3 py-1 rounded-full bg-o/8 border border-o/20 font-mono text-[.58rem] tracking-wider text-o2">JWT / RBAC</span>
+          <span class="px-3 py-1 rounded-full bg-o/8 border border-o/20 font-mono text-[.58rem] tracking-wider text-o2">Python</span>
+          <span class="px-3 py-1 rounded-full bg-o/8 border border-o/20 font-mono text-[.58rem] tracking-wider text-o2">OpenCV</span>
+          <span class="px-3 py-1 rounded-full bg-o/8 border border-o/20 font-mono text-[.58rem] tracking-wider text-o2">Jira</span>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SKILLS -->
-<div class="skills-bg section-full" id="skills">
-  <div class="section" style="padding-top:0;padding-bottom:0;">
-    <div class="s-eyebrow">02 / Skills</div>
-    <h2 class="s-title reveal">Technical<br/><em>Arsenal</em></h2>
+<!-- ═══════════════════ SKILLS ═══════════════════ -->
+<section id="skills" class="bg-paper border-y border-white/7 py-28">
+  <div class="max-w-6xl mx-auto px-8 lg:px-16">
+    <p class="font-mono text-[.6rem] tracking-[.2em] uppercase text-o flex items-center gap-3 mb-2">
+      <span>02 / Skills</span><span class="flex-1 h-px bg-gradient-to-r from-white/7 to-transparent max-w-32"></span>
+    </p>
+    <h2 class="font-display text-[clamp(3rem,6vw,6rem)] leading-[.95] tracking-wide mb-14 reveal">
+      TECHNICAL<br/><span class="text-o">ARSENAL</span>
+    </h2>
 
-    <div class="skills-grid reveal">
-      <div class="skill-block">
-        <div class="sk-label">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-          Languages
-        </div>
-        <div class="sk-tags">
-          <span class="sk-tag hot">PHP 5.6/8</span><span class="sk-tag hot">JavaScript</span>
-          <span class="sk-tag hot">TypeScript</span><span class="sk-tag">C#</span>
-          <span class="sk-tag">HTML5</span><span class="sk-tag">CSS3</span>
-          <span class="sk-tag">SQL</span><span class="sk-tag">Python</span>
-        </div>
-      </div>
-      <div class="skill-block">
-        <div class="sk-label">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-          Frameworks
-        </div>
-        <div class="sk-tags">
-          <span class="sk-tag hot">Laravel</span><span class="sk-tag hot">Angular</span>
-          <span class="sk-tag hot">.NET Core</span><span class="sk-tag">jQuery</span>
-          <span class="sk-tag">Bootstrap</span><span class="sk-tag">Tailwind CSS</span>
-          <span class="sk-tag">OAuth / Auth.js</span>
+    <div class="grid grid-cols-2 skills-3 lg:grid-cols-3 gap-px bg-white/7 border border-white/7 rounded-sm overflow-hidden reveal">
+      <!-- Lang -->
+      <div class="skill-block bg-ink hover:bg-card p-6 transition-colors relative overflow-hidden group">
+        <p class="font-mono text-[.58rem] tracking-[.18em] uppercase text-o flex items-center gap-2 mb-4">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Languages
+        </p>
+        <div class="flex flex-wrap gap-1.5">
+          <span class="sk-tag hot px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">PHP 5.6/8</span>
+          <span class="sk-tag hot px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">JavaScript</span>
+          <span class="sk-tag hot px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">TypeScript</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">C#</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">HTML5</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">CSS3</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">SQL</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">Python</span>
         </div>
       </div>
-      <div class="skill-block">
-        <div class="sk-label">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
-          ORM / Databases
-        </div>
-        <div class="sk-tags">
-          <span class="sk-tag hot">MySQL</span><span class="sk-tag hot">MS SQL Server</span>
-          <span class="sk-tag">PostgreSQL</span><span class="sk-tag">Entity Framework</span>
-          <span class="sk-tag">Dapper</span><span class="sk-tag">RepoDB</span>
-          <span class="sk-tag">NHibernate</span>
-        </div>
-      </div>
-      <div class="skill-block">
-        <div class="sk-label">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-          Dev Tools
-        </div>
-        <div class="sk-tags">
-          <span class="sk-tag hot">Git</span><span class="sk-tag hot">Jira</span>
-          <span class="sk-tag">Postman</span><span class="sk-tag">Swagger</span>
-          <span class="sk-tag">Firebase</span><span class="sk-tag">IIS / Nginx</span>
-          <span class="sk-tag">Selenium</span><span class="sk-tag">VS Code</span>
+      <!-- Frameworks -->
+      <div class="skill-block bg-ink hover:bg-card p-6 transition-colors">
+        <p class="font-mono text-[.58rem] tracking-[.18em] uppercase text-o flex items-center gap-2 mb-4">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> Frameworks
+        </p>
+        <div class="flex flex-wrap gap-1.5">
+          <span class="sk-tag hot px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">Laravel</span>
+          <span class="sk-tag hot px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">Angular</span>
+          <span class="sk-tag hot px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">.NET Core</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">jQuery</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">Bootstrap</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">Tailwind CSS</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">OAuth</span>
         </div>
       </div>
-      <div class="skill-block">
-        <div class="sk-label">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          Search & Messaging
-        </div>
-        <div class="sk-tags">
-          <span class="sk-tag hot">Solr</span><span class="sk-tag">Sphinx</span>
-          <span class="sk-tag hot">RabbitMQ</span>
-        </div>
-      </div>
-      <div class="skill-block">
-        <div class="sk-label">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-          Healthcare / Standards
-        </div>
-        <div class="sk-tags">
-          <span class="sk-tag hot">ABDM APIs</span><span class="sk-tag hot">ABHA Integration</span>
-          <span class="sk-tag">FHIR</span><span class="sk-tag">Fidelius</span>
-          <span class="sk-tag">WebRTC</span><span class="sk-tag">WebSockets</span>
-          <span class="sk-tag">JWT Auth</span><span class="sk-tag">RESTful Design</span>
+      <!-- Databases -->
+      <div class="skill-block bg-ink hover:bg-card p-6 transition-colors">
+        <p class="font-mono text-[.58rem] tracking-[.18em] uppercase text-o flex items-center gap-2 mb-4">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg> Databases / ORM
+        </p>
+        <div class="flex flex-wrap gap-1.5">
+          <span class="sk-tag hot px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">MySQL</span>
+          <span class="sk-tag hot px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">MS SQL Server</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">PostgreSQL</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">Entity Framework</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">Dapper</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">RepoDB</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">NHibernate</span>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- PROJECTS -->
-<section class="section" id="projects">
-  <div class="s-eyebrow">03 / Projects</div>
-  <h2 class="s-title reveal">Things I've<br/><em>Shipped</em></h2>
-
-  <div class="proj-grid reveal">
-    <!-- Featured -->
-    <div class="proj-card feat">
-      <div class="proj-arrow">↗</div>
-      <div class="proj-idx">FEATURED · 01</div>
-      <div class="proj-name">Hospital Information System</div>
-      <div class="proj-desc">
-        Engineered 40+ comprehensive modules for 10,000+ daily hospital users — covering Laboratory management, MHC, Patient Portal, and India's national ABHA health data integration. Built to handle mission-critical clinical workflows at scale, with Solr-powered search, analytics dashboards, and real-time teleconsultation via WebRTC.
-      </div>
-      <div class="proj-tags">
-        <span class="proj-tag">PHP 8</span><span class="proj-tag">Laravel</span>
-        <span class="proj-tag">Angular</span><span class="proj-tag">MySQL</span>
-        <span class="proj-tag">Solr</span><span class="proj-tag">ABHA API</span>
-        <span class="proj-tag">Jasper Reports</span><span class="proj-tag">WebRTC</span>
-      </div>
-    </div>
-
-    <div class="proj-card">
-      <div class="proj-arrow">↗</div>
-      <div class="proj-idx">PROJECT · 02</div>
-      <div class="proj-name">Teleconsultation Platform</div>
-      <div class="proj-desc">
-        Real-time encrypted video consultation system for clinicians using WebRTC peer-to-peer connections and WebSockets signaling. Enables secure doctor-patient video sessions within the HIS ecosystem.
-      </div>
-      <div class="proj-tags">
-        <span class="proj-tag">WebRTC</span><span class="proj-tag">WebSockets</span>
-        <span class="proj-tag">PHP</span><span class="proj-tag">Laravel</span>
-      </div>
-    </div>
-
-    <div class="proj-card">
-      <div class="proj-arrow">↗</div>
-      <div class="proj-idx">PROJECT · 03</div>
-      <div class="proj-name">Zuna E-Commerce</div>
-      <div class="proj-desc">
-        High-traffic e-commerce platform serving 10K+ monthly users. Built with .NET Core backend, Angular frontend, JWT authentication, and granular role-based access control (RBAC).
-      </div>
-      <div class="proj-tags">
-        <span class="proj-tag">.NET Core</span><span class="proj-tag">Angular</span>
-        <span class="proj-tag">JWT</span><span class="proj-tag">RBAC</span>
-        <span class="proj-tag">MS SQL</span>
-      </div>
-    </div>
-
-    <div class="proj-card">
-      <div class="proj-arrow">↗</div>
-      <div class="proj-idx">PROJECT · 04</div>
-      <div class="proj-name">ANPR — Plate Recognition</div>
-      <div class="proj-desc">
-        Automated Number Plate Recognition system achieving 95% accuracy using Python and OpenCV. Integrated with enterprise security infrastructure for real-time vehicle identification.
-      </div>
-      <div class="proj-tags">
-        <span class="proj-tag">Python</span><span class="proj-tag">OpenCV</span>
-        <span class="proj-tag">Computer Vision</span>
-      </div>
-    </div>
-
-    <div class="proj-card">
-      <div class="proj-arrow">↗</div>
-      <div class="proj-idx">PROJECT · 05</div>
-      <div class="proj-name">Laravel CMS + Plugin System</div>
-      <div class="proj-desc">
-        Modular CMS with plugin architecture deployed across 10+ enterprise websites. Reusable components reduced client site setup time by 50%, automating dynamic content management.
-      </div>
-      <div class="proj-tags">
-        <span class="proj-tag">Laravel</span><span class="proj-tag">PHP</span>
-        <span class="proj-tag">MySQL</span><span class="proj-tag">jQuery</span>
-      </div>
-    </div>
-
-    <div class="proj-card">
-      <div class="proj-arrow">↗</div>
-      <div class="proj-idx">PROJECT · 06</div>
-      <div class="proj-name">Cancer Cell Detection</div>
-      <div class="proj-desc">
-        Computer vision model for biomedical research — accurately identifying and classifying cancer cells through custom data annotation pipelines, model training, and clinical validation.
-      </div>
-      <div class="proj-tags">
-        <span class="proj-tag">Python</span><span class="proj-tag">OpenCV</span>
-        <span class="proj-tag">ML</span><span class="proj-tag">Biomedical AI</span>
-      </div>
-    </div>
-
-    <div class="proj-card">
-      <div class="proj-arrow">↗</div>
-      <div class="proj-idx">PROJECT · 07</div>
-      <div class="proj-name">Flight Booking Platform</div>
-      <div class="proj-desc">
-        Full-stack reservation system with seat selection, payment gateway integration, and high-concurrency optimizations for smooth booking experiences under heavy load.
-      </div>
-      <div class="proj-tags">
-        <span class="proj-tag">.NET Core</span><span class="proj-tag">Angular</span>
-        <span class="proj-tag">Payment API</span><span class="proj-tag">SQL</span>
-      </div>
-    </div>
-
-    <div class="proj-card">
-      <div class="proj-arrow">↗</div>
-      <div class="proj-idx">PROJECT · 08</div>
-      <div class="proj-name">Italia Rail</div>
-      <div class="proj-desc">
-        Railway management system built in international collaboration, following strict clean code standards, SOLID principles, and Agile sprint delivery cadence with distributed teams.
-      </div>
-      <div class="proj-tags">
-        <span class="proj-tag">.NET Core</span><span class="proj-tag">Angular</span>
-        <span class="proj-tag">Clean Code</span><span class="proj-tag">Agile</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ABOUT / ACHIEVEMENTS -->
-<section class="section" id="about">
-  <div class="s-eyebrow">04 / About</div>
-  <div class="about-grid reveal">
-    <div class="about-left">
-      <div class="big-q">
-        "Code is the closest thing we have to <span>superpowers.</span>"
-      </div>
-      <div class="about-body">
-        <p>I'm Kathiravan — a full-stack software engineer from Chennai, India, with 3+ years building mission-critical systems that thousands of people rely on daily.</p>
-        <p>At Kranium Health, I architect hospital information systems where reliability and security aren't optional — they're lives. At Tamu Infotech, I built e-commerce and enterprise tools that scaled from zero to tens of thousands of users.</p>
-        <p>Beyond code, I've led teams, captained cricket squads, mentored 100+ students through NSS, and spoken at ABHA digital health conferences. I believe great engineers are great communicators first.</p>
-      </div>
-    </div>
-    <div class="about-right">
-      <div class="about-card">
-        <div class="ac-icon">🎓</div>
-        <div>
-          <div class="ac-title">Placement Head</div>
-          <div class="ac-detail">Dept. of Mining, CUIC · Anna University · 2021<br/>Led campus recruitment strategy for the department</div>
+      <!-- Tools -->
+      <div class="skill-block bg-ink hover:bg-card p-6 transition-colors">
+        <p class="font-mono text-[.58rem] tracking-[.18em] uppercase text-o flex items-center gap-2 mb-4">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg> Dev Tools
+        </p>
+        <div class="flex flex-wrap gap-1.5">
+          <span class="sk-tag hot px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">Git</span>
+          <span class="sk-tag hot px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">Jira</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">Postman</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">Swagger</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">Firebase</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">IIS / Nginx</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">Selenium</span>
         </div>
       </div>
-      <div class="about-card">
-        <div class="ac-icon">🏏</div>
-        <div>
-          <div class="ac-title">Cricket Team Captain</div>
-          <div class="ac-detail">Inter-College Cricket · CEG, Anna University · 2020–21<br/>Led team strategy and player development</div>
+      <!-- Search & Messaging -->
+      <div class="skill-block bg-ink hover:bg-card p-6 transition-colors">
+        <p class="font-mono text-[.58rem] tracking-[.18em] uppercase text-o flex items-center gap-2 mb-4">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Search & Messaging
+        </p>
+        <div class="flex flex-wrap gap-1.5">
+          <span class="sk-tag hot px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">Solr</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">Sphinx</span>
+          <span class="sk-tag hot px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">RabbitMQ</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">WebSockets</span>
         </div>
       </div>
-      <div class="about-card">
-        <div class="ac-icon">🌐</div>
-        <div>
-          <div class="ac-title">Logistics Head</div>
-          <div class="ac-detail">Surang International Workshop · 2021<br/>Managed operations & hospitality at scale</div>
-        </div>
-      </div>
-      <div class="about-card">
-        <div class="ac-icon">🏥</div>
-        <div>
-          <div class="ac-title">ABHA Conference 2025</div>
-          <div class="ac-detail">Digital health ecosystem & healthcare interoperability<br/>Attended as health tech practitioner</div>
-        </div>
-      </div>
-      <div class="about-card">
-        <div class="ac-icon">🤝</div>
-        <div>
-          <div class="ac-title">NSS Volunteer (2017–2021)</div>
-          <div class="ac-detail">Mentored and assisted 100+ students in community programs</div>
+      <!-- Healthcare -->
+      <div class="skill-block bg-ink hover:bg-card p-6 transition-colors">
+        <p class="font-mono text-[.58rem] tracking-[.18em] uppercase text-o flex items-center gap-2 mb-4">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> Healthcare / Standards
+        </p>
+        <div class="flex flex-wrap gap-1.5">
+          <span class="sk-tag hot px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">ABDM APIs</span>
+          <span class="sk-tag hot px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">ABHA Integration</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">FHIR</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">Fidelius</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">WebRTC</span>
+          <span class="sk-tag px-2 py-1 bg-white/[.04] border border-white/8 rounded font-mono text-[.6rem] text-dim">JWT Auth</span>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- EDUCATION -->
-<div class="skills-bg section-full" id="education">
-  <div class="section" style="padding-top:0;padding-bottom:0;">
-    <div class="s-eyebrow">05 / Education</div>
-    <h2 class="s-title reveal">Academic<br/><em>Foundations</em></h2>
-    <div class="edu-list reveal">
-      <div class="edu-row">
-        <div>
-          <div class="edu-deg">BE — Mining Engineering</div>
-          <div class="edu-school">College of Engineering, Anna University, Guindy</div>
-          <div class="edu-yr">2017 – 2021</div>
-        </div>
-        <div class="edu-score">CGPA: 8.04 / 10</div>
-      </div>
-      <div class="edu-row">
-        <div>
-          <div class="edu-deg">12th Standard — Bio-Maths</div>
-          <div class="edu-school">Govt. Higher Secondary School, T. Puthur</div>
-          <div class="edu-yr">2016 – 2017</div>
-        </div>
-        <div class="edu-score">94.33%</div>
-      </div>
-      <div class="edu-row">
-        <div>
-          <div class="edu-deg">10th Standard</div>
-          <div class="edu-school">Govt. Higher Secondary School, T. Puthur</div>
-          <div class="edu-yr">2014 – 2015</div>
-        </div>
-        <div class="edu-score">94.6%</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- CONTACT -->
-<div class="contact-wrap" id="contact">
-  <div class="contact-bg-text">HIRE ME</div>
-  <div class="contact-eyebrow">06 / Let's Work Together</div>
-  <div class="contact-headline reveal">
-    <span>OPEN TO</span><br/>
-    <span class="outline">GREAT</span><br/>
-    <span>WORK</span>
-  </div>
-  <p style="font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--dim);margin-bottom:3rem;line-height:2;position:relative;">
-    Actively seeking Full-Stack, Senior Dev, or Software Engineer roles.<br/>
-    Open to relocation & remote-first opportunities.
+<!-- ═══════════════════ PROJECTS ═══════════════════ -->
+<section id="projects" class="max-w-6xl mx-auto px-8 lg:px-16 py-28">
+  <p class="font-mono text-[.6rem] tracking-[.2em] uppercase text-o flex items-center gap-3 mb-2">
+    <span>03 / Projects</span><span class="flex-1 h-px bg-gradient-to-r from-white/7 to-transparent max-w-32"></span>
   </p>
-  <div class="contact-grid">
-    <a href="mailto:kkathiravan709@gmail.com" class="c-link">
-      <span class="c-icon">✉</span>
-      kkathiravan709@gmail.com
-    </a>
-    <a href="tel:+918124948529" class="c-link">
-      <span class="c-icon">📱</span>
-      +91 81249 48529
-    </a>
-    <a href="https://www.linkedin.com/in/kathiravan-kamaraj" target="_blank" class="c-link">
-      <span class="c-icon" style="font-size:.75rem;font-weight:700;">in</span>
-      LinkedIn Profile
-    </a>
+  <h2 class="font-display text-[clamp(3rem,6vw,6rem)] leading-[.95] tracking-wide mb-14 reveal">
+    THINGS I'VE<br/><span class="text-o">SHIPPED</span>
+  </h2>
+
+  <div class="grid lg:grid-cols-2 gap-px bg-white/7 border border-white/7 rounded-sm overflow-hidden reveal">
+
+    <!-- FEATURED -->
+    <div class="proj-card proj-feat lg:col-span-2 relative bg-ink hover:bg-card p-8 transition-colors overflow-hidden">
+      <div class="proj-arrow absolute top-6 right-6 w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-dim text-sm">↗</div>
+      <p class="font-mono text-[.58rem] tracking-[.15em] uppercase text-dim mb-4">FEATURED · 01</p>
+      <h3 class="font-display text-[clamp(2rem,4vw,3rem)] leading-none tracking-wide text-white mb-3">Hospital Information System</h3>
+      <p class="font-body text-lg leading-relaxed text-dim max-w-2xl mb-5">Engineered 40+ modules for 10,000+ daily hospital users — covering Laboratory, MHC, Patient Portal & ABHA Integration. Built to handle mission-critical clinical workflows at scale with Solr-powered search, analytics dashboards, and real-time teleconsultation via WebRTC.</p>
+      <div class="flex flex-wrap gap-1.5">
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] tracking-wider text-teal rounded">PHP 8</span>
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] tracking-wider text-teal rounded">Laravel</span>
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] tracking-wider text-teal rounded">Angular</span>
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] tracking-wider text-teal rounded">MySQL</span>
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] tracking-wider text-teal rounded">Solr</span>
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] tracking-wider text-teal rounded">ABHA API</span>
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] tracking-wider text-teal rounded">WebRTC</span>
+      </div>
+    </div>
+
+    <!-- cards macro -->
+    <div class="proj-card relative bg-ink hover:bg-card p-8 transition-colors overflow-hidden">
+      <div class="proj-arrow absolute top-6 right-6 w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-dim text-sm">↗</div>
+      <p class="font-mono text-[.58rem] tracking-[.15em] uppercase text-dim mb-4">PROJECT · 02</p>
+      <h3 class="font-display text-2xl tracking-wide text-white mb-2">Teleconsultation Platform</h3>
+      <p class="font-body text-lg leading-relaxed text-dim mb-5">Real-time encrypted video consultation via WebRTC peer-to-peer & WebSockets signaling. Secure doctor-patient sessions embedded in the HIS ecosystem.</p>
+      <div class="flex flex-wrap gap-1.5">
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] text-teal rounded">WebRTC</span>
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] text-teal rounded">WebSockets</span>
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] text-teal rounded">Laravel</span>
+      </div>
+    </div>
+
+    <div class="proj-card relative bg-ink hover:bg-card p-8 transition-colors overflow-hidden">
+      <div class="proj-arrow absolute top-6 right-6 w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-dim text-sm">↗</div>
+      <p class="font-mono text-[.58rem] tracking-[.15em] uppercase text-dim mb-4">PROJECT · 03</p>
+      <h3 class="font-display text-2xl tracking-wide text-white mb-2">Zuna E-Commerce</h3>
+      <p class="font-body text-lg leading-relaxed text-dim mb-5">High-traffic platform serving 10K+ monthly users with JWT authentication and granular role-based access control built on .NET Core & Angular.</p>
+      <div class="flex flex-wrap gap-1.5">
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] text-teal rounded">.NET Core</span>
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] text-teal rounded">Angular</span>
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] text-teal rounded">JWT / RBAC</span>
+      </div>
+    </div>
+
+    <div class="proj-card relative bg-ink hover:bg-card p-8 transition-colors overflow-hidden">
+      <div class="proj-arrow absolute top-6 right-6 w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-dim text-sm">↗</div>
+      <p class="font-mono text-[.58rem] tracking-[.15em] uppercase text-dim mb-4">PROJECT · 04</p>
+      <h3 class="font-display text-2xl tracking-wide text-white mb-2">ANPR System</h3>
+      <p class="font-body text-lg leading-relaxed text-dim mb-5">Automated Number Plate Recognition using Python + OpenCV achieving 95% accuracy. Integrated with enterprise security infrastructure for real-time vehicle ID.</p>
+      <div class="flex flex-wrap gap-1.5">
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] text-teal rounded">Python</span>
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] text-teal rounded">OpenCV</span>
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] text-teal rounded">CV / ML</span>
+      </div>
+    </div>
+
+    <div class="proj-card relative bg-ink hover:bg-card p-8 transition-colors overflow-hidden">
+      <div class="proj-arrow absolute top-6 right-6 w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-dim text-sm">↗</div>
+      <p class="font-mono text-[.58rem] tracking-[.15em] uppercase text-dim mb-4">PROJECT · 05</p>
+      <h3 class="font-display text-2xl tracking-wide text-white mb-2">Laravel CMS + Plugins</h3>
+      <p class="font-body text-lg leading-relaxed text-dim mb-5">Modular CMS with plugin architecture across 10+ enterprise sites. Reusable components reduced client setup time by 50% via dynamic content automation.</p>
+      <div class="flex flex-wrap gap-1.5">
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] text-teal rounded">Laravel</span>
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] text-teal rounded">PHP</span>
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] text-teal rounded">jQuery</span>
+      </div>
+    </div>
+
+    <div class="proj-card relative bg-ink hover:bg-card p-8 transition-colors overflow-hidden">
+      <div class="proj-arrow absolute top-6 right-6 w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-dim text-sm">↗</div>
+      <p class="font-mono text-[.58rem] tracking-[.15em] uppercase text-dim mb-4">PROJECT · 06</p>
+      <h3 class="font-display text-2xl tracking-wide text-white mb-2">Cancer Cell Detection</h3>
+      <p class="font-body text-lg leading-relaxed text-dim mb-5">CV model for biomedical research — identifying & classifying cancer cells with custom annotation pipelines, model training, and clinical validation.</p>
+      <div class="flex flex-wrap gap-1.5">
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] text-teal rounded">Python</span>
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] text-teal rounded">OpenCV</span>
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] text-teal rounded">Biomedical AI</span>
+      </div>
+    </div>
+
+    <div class="proj-card relative bg-ink hover:bg-card p-8 transition-colors overflow-hidden">
+      <div class="proj-arrow absolute top-6 right-6 w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-dim text-sm">↗</div>
+      <p class="font-mono text-[.58rem] tracking-[.15em] uppercase text-dim mb-4">PROJECT · 07</p>
+      <h3 class="font-display text-2xl tracking-wide text-white mb-2">Flight Booking Platform</h3>
+      <p class="font-body text-lg leading-relaxed text-dim mb-5">Full-stack reservation system with seat selection, payment gateway, and high-concurrency optimizations for smooth experiences under heavy traffic load.</p>
+      <div class="flex flex-wrap gap-1.5">
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] text-teal rounded">.NET Core</span>
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] text-teal rounded">Angular</span>
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] text-teal rounded">Payment API</span>
+      </div>
+    </div>
+
+    <div class="proj-card relative bg-ink hover:bg-card p-8 transition-colors overflow-hidden">
+      <div class="proj-arrow absolute top-6 right-6 w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-dim text-sm">↗</div>
+      <p class="font-mono text-[.58rem] tracking-[.15em] uppercase text-dim mb-4">PROJECT · 08</p>
+      <h3 class="font-display text-2xl tracking-wide text-white mb-2">Italia Rail</h3>
+      <p class="font-body text-lg leading-relaxed text-dim mb-5">Railway management system built with international developers. Strict clean code standards, SOLID principles, and Agile delivery with distributed teams.</p>
+      <div class="flex flex-wrap gap-1.5">
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] text-teal rounded">.NET Core</span>
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] text-teal rounded">Angular</span>
+        <span class="px-2 py-1 bg-teal/7 border border-teal/15 font-mono text-[.58rem] text-teal rounded">Clean Code</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ ABOUT ═══════════════════ -->
+<section id="about" class="bg-paper border-y border-white/7 py-28">
+  <div class="max-w-6xl mx-auto px-8 lg:px-16">
+    <p class="font-mono text-[.6rem] tracking-[.2em] uppercase text-o flex items-center gap-3 mb-2">
+      <span>04 / About</span><span class="flex-1 h-px bg-gradient-to-r from-white/7 to-transparent max-w-32"></span>
+    </p>
+    <div class="grid lg:grid-cols-2 gap-16 items-start">
+      <div class="reveal">
+        <h2 class="font-body italic text-[clamp(2rem,4vw,4rem)] leading-tight text-white mb-6">
+          "Code is the closest thing we have to <span class="text-o">superpowers.</span>"
+        </h2>
+        <div class="space-y-4 font-body text-xl leading-relaxed text-dim">
+          <p>I'm Kathiravan — a full-stack engineer from Chennai with 3+ years building systems that thousands rely on daily. At Kranium Health, I architect hospital platforms where reliability isn't optional — it's lives.</p>
+          <p>At Tamu Infotech I scaled e-commerce from zero to tens of thousands of users. My edge: I understand both the technical depth and the business impact of what I build.</p>
+          <p>Beyond code — I've led teams, captained cricket squads, mentored 100+ students, and spoken at ABHA digital health conferences. Great engineers are great communicators first.</p>
+        </div>
+      </div>
+      <div class="space-y-3 reveal">
+        <div class="about-card flex gap-4 p-5 bg-surface border border-white/7 rounded-sm">
+          <span class="text-2xl">🎓</span>
+          <div><p class="font-semibold text-white text-sm mb-0.5">Placement Head</p><p class="font-mono text-sm text-dim leading-relaxed">Dept. of Mining, CUIC · Anna University · 2021</p></div>
+        </div>
+        <div class="about-card flex gap-4 p-5 bg-surface border border-white/7 rounded-sm">
+          <span class="text-2xl">🏏</span>
+          <div><p class="font-semibold text-white text-sm mb-0.5">Cricket Team Captain</p><p class="font-mono text-sm text-dim leading-relaxed">Inter-College · CEG, Anna University · 2020–21</p></div>
+        </div>
+        <div class="about-card flex gap-4 p-5 bg-surface border border-white/7 rounded-sm">
+          <span class="text-2xl">🌐</span>
+          <div><p class="font-semibold text-white text-sm mb-0.5">Logistics Head</p><p class="font-mono text-sm text-dim leading-relaxed">Surang International Workshop · 2021</p></div>
+        </div>
+        <div class="about-card flex gap-4 p-5 bg-surface border border-white/7 rounded-sm">
+          <span class="text-2xl">🏥</span>
+          <div><p class="font-semibold text-white text-sm mb-0.5">ABHA Conference 2025</p><p class="font-mono text-sm text-dim leading-relaxed">Digital health ecosystem & healthcare interoperability</p></div>
+        </div>
+        <div class="about-card flex gap-4 p-5 bg-surface border border-white/7 rounded-sm">
+          <span class="text-2xl">🤝</span>
+          <div><p class="font-semibold text-white text-sm mb-0.5">NSS Volunteer (2017–2021)</p><p class="font-mono text-sm text-dim leading-relaxed">Mentored 100+ students in community programs</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ EDUCATION ═══════════════════ -->
+<section id="education" class="max-w-6xl mx-auto px-8 lg:px-16 py-28">
+  <p class="font-mono text-[.6rem] tracking-[.2em] uppercase text-o flex items-center gap-3 mb-2">
+    <span>05 / Education</span><span class="flex-1 h-px bg-gradient-to-r from-white/7 to-transparent max-w-32"></span>
+  </p>
+  <h2 class="font-display text-[clamp(3rem,6vw,6rem)] leading-[.95] tracking-wide mb-14 reveal">
+    ACADEMIC<br/><span class="text-o">FOUNDATIONS</span>
+  </h2>
+  <div class="flex flex-col gap-px bg-white/7 border border-white/7 rounded-sm overflow-hidden reveal">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-ink hover:bg-card transition-colors p-6 sm:p-8">
+      <div>
+        <p class="font-semibold text-white text-xl">BE — Mining Engineering</p>
+        <p class="font-mono text-sm text-o tracking-wider mt-0.5">College of Engineering, Anna University, Guindy</p>
+        <p class="font-mono text-sm text-dim mt-1">2017 – 2021</p>
+      </div>
+      <span class="shrink-0 px-4 py-1.5 rounded-full bg-o2/10 border border-o2/25 font-mono text-[.65rem] text-o2 tracking-wider">CGPA: 8.04 / 10</span>
+    </div>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-ink hover:bg-card transition-colors p-6 sm:p-8">
+      <div>
+        <p class="font-semibold text-white text-xl">12th Standard — Bio-Maths</p>
+        <p class="font-mono text-sm text-o tracking-wider mt-0.5">Govt. Higher Secondary School, T. Puthur</p>
+        <p class="font-mono text-sm text-dim mt-1">2016 – 2017</p>
+      </div>
+      <span class="shrink-0 px-4 py-1.5 rounded-full bg-o2/10 border border-o2/25 font-mono text-[.65rem] text-o2 tracking-wider">94.33%</span>
+    </div>
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-ink hover:bg-card transition-colors p-6 sm:p-8">
+      <div>
+        <p class="font-semibold text-white text-xl">10th Standard</p>
+        <p class="font-mono text-sm text-o tracking-wider mt-0.5">Govt. Higher Secondary School, T. Puthur</p>
+        <p class="font-mono text-sm text-dim mt-1">2014 – 2015</p>
+      </div>
+      <span class="shrink-0 px-4 py-1.5 rounded-full bg-o2/10 border border-o2/25 font-mono text-[.65rem] text-o2 tracking-wider">94.6%</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ CONTACT ═══════════════════ -->
+<div id="contact" class="relative bg-paper border-t border-white/7 py-32 text-center overflow-hidden">
+  <div class="contact-ghost select-none">HIRE ME</div>
+  <div class="relative z-10 max-w-3xl mx-auto px-8">
+    <p class="font-mono text-[.6rem] tracking-[.2em] uppercase text-o mb-5">06 / Let's Work Together</p>
+    <h2 class="font-display leading-[.9] tracking-wide mb-6 reveal" style="font-size:clamp(4rem,10vw,10rem)">
+      OPEN TO<br/><span class="text-outline">GREAT</span><br/>WORK
+    </h2>
+    <p class="font-mono text-base leading-loose text-dim mb-10">
+      Seeking Full-Stack, Senior Dev or Software Engineer roles.<br/>Open to relocation &amp; remote-first opportunities.
+    </p>
+    <div class="flex flex-wrap justify-center gap-3 reveal">
+      <a href="mailto:kkathiravan709@gmail.com" class="magnetic inline-flex items-center gap-3 px-6 py-4 bg-surface border border-white/7 rounded-sm font-mono text-[.7rem] tracking-wider text-white hover:bg-o hover:border-o hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(255,107,53,.3)] transition-all">
+        <span class="w-9 h-9 rounded-full bg-o/12 flex items-center justify-center">✉</span>
+        kkathiravan709@gmail.com
+      </a>
+      <a href="tel:+918124948529" class="magnetic inline-flex items-center gap-3 px-6 py-4 bg-surface border border-white/7 rounded-sm font-mono text-[.7rem] tracking-wider text-white hover:bg-o hover:border-o hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(255,107,53,.3)] transition-all">
+        <span class="w-9 h-9 rounded-full bg-o/12 flex items-center justify-center">📱</span>
+        +91 81249 48529
+      </a>
+      <a href="https://www.linkedin.com/in/kathiravan-kamaraj" target="_blank" class="magnetic inline-flex items-center gap-3 px-6 py-4 bg-surface border border-white/7 rounded-sm font-mono text-[.7rem] tracking-wider text-white hover:bg-o hover:border-o hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(255,107,53,.3)] transition-all">
+        <span class="w-9 h-9 rounded-full bg-o/12 flex items-center justify-center font-bold text-xs">in</span>
+        LinkedIn Profile
+      </a>
+    </div>
   </div>
 </div>
 
 <!-- FOOTER -->
-<footer>
-  <p>© 2025 Kathiravan Kamaraj · Built with precision &amp; passion · Chennai, India</p>
-  <p>Open to Relocation · <a href="mailto:kkathiravan709@gmail.com">kkathiravan709@gmail.com</a></p>
+<footer class="flex flex-wrap justify-between items-center gap-4 px-8 lg:px-16 py-6 border-t border-white/7">
+  <p class="font-mono text-[.58rem] tracking-wider text-dim">© 2025 Kathiravan Kamaraj · Chennai, India</p>
+  <p class="font-mono text-[.58rem] tracking-wider text-dim"><a href="mailto:kkathiravan709@gmail.com" class="text-o hover:underline">kkathiravan709@gmail.com</a></p>
 </footer>
 
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
-/* ── LOADER ── */
-(function(){
-  const bar=document.getElementById('loaderBar');
-  const pct=document.getElementById('loaderPct');
-  const loader=document.getElementById('loader');
-  let p=0;
+$(function(){
+
+  /* ── LOADER ── */
+  let pct=0;
   const iv=setInterval(()=>{
-    p+=Math.random()*12+4;
-    if(p>100)p=100;
-    bar.style.width=p+'%';
-    pct.textContent=Math.floor(p)+'%';
-    if(p===100){
+    pct+=Math.random()*14+4;
+    if(pct>100)pct=100;
+    $('#loader-bar').css('width',pct+'%');
+    $('#loader-pct').text(Math.floor(pct)+'%');
+    if(pct>=100){
       clearInterval(iv);
-      setTimeout(()=>{
-        gsap.to(loader,{opacity:0,duration:.6,onComplete:()=>{loader.style.display='none';}});
-        initAnimations();
-      },300);
+      setTimeout(()=>$('#loader').fadeOut(500),200);
     }
-  },80);
-})();
+  },70);
 
-/* ── CURSOR ── */
-(function(){
-  const cur=document.getElementById('cur');
-  const ring=document.getElementById('cur-ring');
-  let mx=window.innerWidth/2,my=window.innerHeight/2,rx=mx,ry=my;
-  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
-  (function loop(){ring.style.left=rx+'px';ring.style.top=ry+'px';rx+=(mx-rx)*.1;ry+=(my-ry)*.1;requestAnimationFrame(loop);})();
-  document.querySelectorAll('a,button,.proj-card,.skill-block,.about-card').forEach(el=>{
-    el.addEventListener('mouseenter',()=>{ring.style.width='60px';ring.style.height='60px';ring.style.borderColor='rgba(255,107,53,.8)';});
-    el.addEventListener('mouseleave',()=>{ring.style.width='40px';ring.style.height='40px';ring.style.borderColor='rgba(255,107,53,.4)';});
+  /* ── CURSOR ── */
+  let mx=0,my=0,rx=0,ry=0;
+  $(document).on('mousemove',function(e){
+    mx=e.clientX;my=e.clientY;
+    $('#cur').css({left:mx,top:my});
   });
-})();
+  (function loop(){
+    rx+=(mx-rx)*.1; ry+=(my-ry)*.1;
+    $('#cur-ring').css({left:rx,top:ry});
+    requestAnimationFrame(loop);
+  })();
+  $('a,button,.proj-card,.skill-block,.about-card').on('mouseenter',()=>$('#cur-ring').addClass('cursor-grow'))
+    .on('mouseleave',()=>$('#cur-ring').removeClass('cursor-grow'));
 
-/* ── NAV SCROLL ── */
-window.addEventListener('scroll',()=>{
-  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60);
-});
+  /* ── NAV SCROLL ── */
+  $(window).on('scroll',function(){
+    $('#nav').toggleClass('bg-ink/85 backdrop-blur-xl border-b border-white/7 !py-3',$(this).scrollTop()>60);
+  });
 
-/* ── EXP TABS ── */
-function switchTab(i){
-  document.querySelectorAll('.exp-tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));
-  document.querySelectorAll('.exp-panel').forEach((p,idx)=>p.classList.toggle('active',idx===i));
-}
+  /* ── MOBILE MENU ── */
+  $('#mob-btn').on('click',function(){
+    const open=$('#mob-menu').hasClass('flex');
+    $('#mob-menu').toggleClass('hidden flex');
+    $(this).find('span').eq(0).toggleClass('rotate-45 translate-y-2');
+    $(this).find('span').eq(1).toggleClass('opacity-0');
+    $(this).find('span').eq(2).toggleClass('-rotate-45 -translate-y-2');
+  });
+  $('.mob-link').on('click',()=>$('#mob-menu').addClass('hidden').removeClass('flex'));
 
-/* ── GSAP ANIMATIONS ── */
-function initAnimations(){
-  gsap.registerPlugin(ScrollTrigger);
+  /* ── EXP TABS ── */
+  $('#exp-tabs').on('click','.exp-tab',function(){
+    const i=$(this).data('tab');
+    $('.exp-tab').removeClass('active text-o').addClass('text-dim');
+    $(this).addClass('active text-o').removeClass('text-dim');
+    $('.exp-panel').removeClass('active').hide();
+    $('#panel-'+i).addClass('active').show();
+  });
 
-  /* hero stagger */
-  gsap.from('.hero-badge',{opacity:0,y:20,duration:.8,delay:.2});
-  gsap.from('.hero-pre',{opacity:0,x:-30,duration:.8,delay:.3});
-  gsap.from('.hero-name .l1',{opacity:0,y:60,duration:1,delay:.4,ease:'power3.out'});
-  gsap.from('.hero-name .l2',{opacity:0,y:60,duration:1,delay:.55,ease:'power3.out'});
-  gsap.from('.hero-tagline',{opacity:0,y:30,duration:.8,delay:.7});
-  gsap.from('.hero-desc',{opacity:0,y:20,duration:.7,delay:.85});
-  gsap.from('.hero-actions',{opacity:0,y:20,duration:.7,delay:1});
-  gsap.from('.hero-stats .hero-stat',{opacity:0,y:20,duration:.6,stagger:.1,delay:1.1});
-  gsap.from('.terminal',{opacity:0,x:60,duration:1,delay:.6,ease:'power3.out'});
-
-  /* marquee parallax */
-  gsap.to('.marquee-track',{scrollTrigger:{trigger:'.marquee-wrap',scrub:1},x:-40});
-
-  /* reveal elements */
-  document.querySelectorAll('.reveal').forEach(el=>{
-    gsap.from(el,{
-      scrollTrigger:{trigger:el,start:'top 85%',toggleActions:'play none none none'},
-      opacity:0,y:50,duration:.9,ease:'power3.out'
+  /* ── REVEAL ON SCROLL ── */
+  const $reveals=$('.reveal');
+  function checkReveal(){
+    const wh=$(window).height();
+    $reveals.each(function(){
+      if($(this).offset().top<$(window).scrollTop()+wh*.88){
+        $(this).addClass('in');
+      }
     });
-  });
+  }
+  $(window).on('scroll',checkReveal);
+  checkReveal();
 
-  /* stat counter */
-  document.querySelectorAll('.stat-n').forEach(el=>{
-    const txt=el.textContent;
-    const num=parseFloat(txt);
-    if(!isNaN(num)){
-      gsap.from({val:0},{
-        val:num,duration:2,delay:.5,ease:'power2.out',
-        scrollTrigger:{trigger:el,start:'top 90%'},
-        onUpdate:function(){el.textContent=Math.round(this.targets()[0].val)+(txt.replace(/[0-9.]/g,''));}
+  /* ── STAT COUNTERS ── */
+  let counted=false;
+  $(window).on('scroll',function(){
+    if(counted)return;
+    const $stats=$('.stat-card');
+    if(!$stats.length)return;
+    const top=$stats.first().offset().top;
+    if($(window).scrollTop()+$(window).height()>top){
+      counted=true;
+      $stats.each(function(){
+        const $el=$(this).find('[data-count]');
+        const end=+$el.data('count');
+        const suf=$el.data('suffix')||'';
+        $({v:0}).animate({v:end},{duration:1600,easing:'swing',
+          step:function(){$el.text(Math.floor(this.v)+suf);},
+          complete:function(){$el.text(end+suf);}
+        });
       });
     }
   });
 
-  /* proj cards stagger */
-  gsap.from('.proj-card',{
-    scrollTrigger:{trigger:'.proj-grid',start:'top 80%'},
-    opacity:0,y:40,duration:.7,stagger:.1,ease:'power2.out'
+  /* ── MAGNETIC BUTTONS ── */
+  $('.magnetic').on('mousemove',function(e){
+    const r=this.getBoundingClientRect();
+    const x=(e.clientX-r.left-r.width/2)*.28;
+    const y=(e.clientY-r.top-r.height/2)*.28;
+    $(this).css('transform',`translate(${x}px,${y}px) translateY(-3px)`);
+  }).on('mouseleave',function(){
+    $(this).css('transform','');
   });
 
-  /* skill blocks */
-  gsap.from('.skill-block',{
-    scrollTrigger:{trigger:'.skills-grid',start:'top 80%'},
-    opacity:0,scale:.96,duration:.6,stagger:.08,ease:'power2.out'
+  /* ── ACTIVE NAV LINK ── */
+  const $sections=$('section[id],div[id]').not('#loader,#mob-menu');
+  $(window).on('scroll',function(){
+    let cur='';
+    $sections.each(function(){
+      if($(window).scrollTop()>=$(this).offset().top-200) cur=$(this).attr('id');
+    });
+    $('.nav-link').removeClass('active');
+    $(`.nav-link[href="#${cur}"]`).addClass('active');
   });
-}
 
-/* ── MAGNETIC BUTTONS ── */
-document.querySelectorAll('.btn-main,.btn-ghost,.nav-hire').forEach(btn=>{
-  btn.addEventListener('mousemove',e=>{
-    const r=btn.getBoundingClientRect();
-    const x=(e.clientX-r.left-r.width/2)*.3;
-    const y=(e.clientY-r.top-r.height/2)*.3;
-    btn.style.transform=`translate(${x}px,${y}px) translateY(-3px)`;
-  });
-  btn.addEventListener('mouseleave',()=>{btn.style.transform='';});
 });
-
-/* ── ACTIVE NAV ── */
-const sections=document.querySelectorAll('section[id],div[id]');
-const navLinks=document.querySelectorAll('.nav-links a');
-const io=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      navLinks.forEach(a=>{
-        a.style.color=a.getAttribute('href')==='#'+e.target.id?'var(--text)':'';
-      });
-    }
-  });
-},{threshold:.4});
-sections.forEach(s=>io.observe(s));
 </script>
 </body>
 </html>
